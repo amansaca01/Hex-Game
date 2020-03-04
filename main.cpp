@@ -1,10 +1,9 @@
-
 #include "board.h"
 
-int main(){
+int main() {
 
-	board hex(7);
+ 	board hex(3);
 	hex.print_board();
-	//hex.print_graph();
+//	hex.print_graph();
 	return 0;
 }

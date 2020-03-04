@@ -20,8 +20,6 @@ public:
 private:
 	int board_size;
 	graph tablero;
-	std::vector<int> square_values;
-	std::vector<const char*> marker { ".", "x", "o" };
 };
 
 #endif /* BOARD_H_ */

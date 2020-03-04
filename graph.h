@@ -13,6 +13,10 @@
 
 typedef std::pair<int, int> pairs;
 
+enum color {
+	WHITE, RED, BLUE
+};
+
 class graph {
 public:
 	graph(const int &size = 1, const float &density = 0, const pairs &range =
@@ -26,7 +30,9 @@ public:
 	int V() const; //returns the number of vertices in the graph
 	int E(); //returns the number of edges in the graph
 	bool adjacent(const int &x, const int &y) const; //tests whether there is an edge from node x to node y.
+	bool adjacent(const int &x, const int &y, const color &col) const;
 	std::vector<int> neighbors(const int &x); //lists all nodes y such that there is an edge from x to y.
+	std::vector<int> neighbors(const int &x, const color &col);
 	void add_edge(const int &x, const int &y); //adds the edge from x to y, if it is not there
 	void add_edge(const int &x, const int &y, const int &distance); //adds the edge from x to y a certain distance
 	void delete_edge(const int &x, const int &y); //removes the edge from x to y, if it is there.
@@ -34,12 +40,15 @@ public:
 	void set_edge_value(const int &x, const int &y, const int &distance); //sets the value associated to the edge (x,y) to v.
 	int get_edge_id(const int &x, const int &y); // returns an ID for a graph
 	pairs get_nodes(const int &edge_id); // gets the nodes that an edge connects
+	color get_node_color(const int &x) const;
+	void set_node_color(const int &x, const color &col);
 	bool is_looped();
 	int tree_cost(); // return the sum of all edge values
 	void print_graph();
 
 private:
 	std::vector<std::vector<int>> ad_matrix; // connectivity matrices are used
+	std::vector<color> node_color;
 	int size; // number of nodes
 	pairs range; // pair containing upper and lower edges distance range
 };
