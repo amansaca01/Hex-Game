@@ -12,10 +12,11 @@
 #include<iterator>
 #include <numeric> //acumulate
 
+
 using namespace std;
 
 graph::graph(const int &size, const float &density, const pairs &range) :
-		size(size), range(range) {
+		node_color(size, WHITE), size(size), range(range) {
 
 	ad_matrix.resize(size, std::vector<int>(size, 0)); // initializes adjacents matrix with 0s
 
@@ -78,10 +79,26 @@ bool graph::adjacent(const int &x, const int &y) const {
 	return ad_matrix[x][y] != 0;
 }
 
+bool graph::adjacent(const int &x, const int &y, const color &col) const {
+	if (node_color[x] == col && node_color[y] == col)
+		return ad_matrix[x][y] != 0;
+	else
+		return false;
+}
+
 std::vector<int> graph::neighbors(const int &x) {
 	std::vector<int> adjacents;
 	for (int i = 0; i < size; ++i) {
 		if (adjacent(x, i))
+			adjacents.push_back(i);
+	}
+	return adjacents;
+}
+
+std::vector<int> graph::neighbors(const int &x, const color &col) {
+	std::vector<int> adjacents;
+	for (int i = 0; i < size; ++i) {
+		if (adjacent(x, i, col))
 			adjacents.push_back(i);
 	}
 	return adjacents;
@@ -131,6 +148,14 @@ pairs graph::get_nodes(const int &edge_id) {
 	int y = edge_id - size * x;
 
 	return std::make_pair(x, y);
+}
+
+color graph::get_node_color(const int &x) const {
+	return node_color[x];
+}
+
+void graph::set_node_color(const int &x, const color &col) {
+	node_color[x] = col;
 }
 
 bool graph::is_looped() {
