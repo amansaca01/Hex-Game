@@ -3,8 +3,8 @@
 
 int main(){
 
-	board hex;
+	board hex(7);
 	hex.print_board();
-	hex.print_graph();
+	//hex.print_graph();
 	return 0;
 }
