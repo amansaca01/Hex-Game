@@ -11,7 +11,7 @@
 #include <numeric>
 #include <map>
 
-board::board(const int board_size) :
+board::board(const int &board_size) :
 		board_size(board_size), tablero(pow(board_size, 2) - 1, 0) {
 
 	for (int a = 0; a < tablero.V() - 1; a++) {
@@ -25,6 +25,28 @@ board::board(const int board_size) :
 		}
 	}
 	tablero.add_edge(tablero.V() - 2, tablero.V() - 1, 1);
+}
+
+void board::reset() {
+	for (int x = 0; x < tablero.V(); ++x)
+		tablero.set_node_color(x, WHITE);
+}
+
+int board::get_node(const int &x, const int &y) {
+	int node = x * board_size + y;
+	if (node < tablero.V())
+		return node;
+	else
+		std::cout << "Coordinates (" << x << "," << y << ") are out of bounds.";
+	return -1;
+}
+
+color board::get_color(const int &node) {
+	tablero.get_node_color(node);
+}
+
+void board::set_color(const int &node, color &col) {
+	tablero.set_node_color(node, col);
 }
 
 void board::print_graph() {
