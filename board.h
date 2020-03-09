@@ -12,8 +12,12 @@
 
 class board {
 public:
-	board(const int board_size = 11);
+	board(const int &board_size = 11);
 
+	void reset();
+	int get_node(const int &x,const int &y);
+	color get_color(const int &node);
+	void set_color(const int &node, color &col);
 	void print_graph();
 	void print_board();
 	virtual ~board() = default;
