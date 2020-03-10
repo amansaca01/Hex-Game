@@ -10,8 +10,7 @@
 #include<vector>
 #include<fstream>
 #include<iterator>
-#include <numeric> //acumulate
-
+#include <numeric> //accumulate
 
 using namespace std;
 
@@ -177,11 +176,11 @@ int graph::tree_cost() {
 }
 
 void graph::print_graph() {
-
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
 			cout << ad_matrix[i][j] << " ";
 		}
 		cout << endl;
 	}
+	cout << endl;
 }

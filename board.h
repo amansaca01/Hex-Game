@@ -9,21 +9,26 @@
 #define BOARD_H_
 
 #include "graph.h"
+#include "shortest_path.h"
 
 class board {
 public:
 	board(const int &board_size = 11);
-
+	graph get_tablero();
 	void reset();
-	int get_node(const int &x,const int &y);
+	int get_node(const int &x, const int &y);
 	color get_color(const int &node);
-	void set_color(const int &node, color &col);
+	void set_color(const int &node, const color &col);
 	void print_graph();
 	void print_board();
 	virtual ~board() = default;
+	void north_to_south();
+	void west_to_east();
+
 private:
 	int board_size;
 	graph tablero;
+	ShortestPath camino;
 };
 
 #endif /* BOARD_H_ */
