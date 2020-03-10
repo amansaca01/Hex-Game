@@ -27,30 +27,34 @@ board::board(const int &board_size) :
 	tablero.add_edge(tablero.V() - 2, tablero.V() - 1, 1);
 }
 
+int board::size() {
+	return board_size;
+}
+
 void board::reset() {
 	for (int x = 0; x < tablero.V(); ++x)
 		tablero.set_node_color(x, WHITE);
 }
 
-int board::get_node(const int &x, const int &y) {
-	int node = x * board_size + y;
+int board::get_node(const square &move) {
+	int node = move.second * board_size + move.first;
 	if (node < tablero.V())
 		return node;
 	else
-		std::cout << "Coordinates (" << x << "," << y << ") are out of bounds.";
+		std::cout << "Coordinates (" << move.first << "," << move.second << ") are out of bounds.";
 	return -1;
 }
 
 color board::get_color(const int &node) {
-	tablero.get_node_color(node);
+	return tablero.get_node_color(node);
 }
 
 void board::set_color(const int &node, color &col) {
-	tablero.set_node_color(node, col);
+	return tablero.set_node_color(node, col);
 }
 
 void board::print_graph() {
-	tablero.print_graph();
+	return tablero.print_graph();
 }
 
 void board::print_board() {
@@ -89,3 +93,32 @@ void board::print_board() {
 		std::cout << char(i + 65) << "   ";
 	std::cout << std::endl;
 }
+
+bool board::is_square(const square &move) {
+
+	auto check_range = [this] (int i) {return (i >= 0 && i < board_size);};
+
+	if (!check_range(move.first)) {
+		std::cout << "Row is not valid, should be between A and "
+				<< char(64 + board_size) << std::endl;
+		return false;
+	}
+	if (!check_range(move.second)) {
+		std::cout << "Column is not valid, should be between 1 and "
+				<< board_size << std::endl;
+		return false;
+	}
+	return true;
+}
+
+bool board::is_free_square(const square &move) {
+	if (!is_square(move))
+		return false;
+	if (get_color(get_node(move)) != WHITE) {
+		std::cout << "Square " << move.first << move.second
+				<< " is already in use." << std::endl;
+		return false;
+	}
+	return true;
+}
+

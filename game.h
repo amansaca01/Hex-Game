@@ -10,12 +10,16 @@
 
 #include "board.h"
 
+
 class game {
 public:
 	game(const int &board_size = 11);
 	virtual ~game() = default;
 
+	void play();
 	void reset();
+	square read_move();
+	square random_move();
 	void make_move(const int &x, const int &y);
 	int next_turn();
 private:
