@@ -22,13 +22,12 @@ public:
 	void print_graph();
 	void print_board();
 	virtual ~board() = default;
-	void north_to_south();
+	void north_to_south();//const graph &G
 	void west_to_east();
 
 private:
 	int board_size;
 	graph tablero;
-	ShortestPath camino;
 };
 
 #endif /* BOARD_H_ */

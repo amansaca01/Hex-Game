@@ -13,16 +13,26 @@ int main() {
 	board hex(size);
 
 	// Introducir un movimiento
+//	hex.set_color(1, BLUE);
+//	hex.set_color(4, BLUE);
+//	hex.set_color(7, BLUE);
+
+	hex.set_color(3, BLUE);
 	hex.set_color(4, BLUE);
+	hex.set_color(5, BLUE);
+
+	hex.set_color(1, RED);
+	hex.set_color(4, RED);
+	hex.set_color(7, RED);
 
 	// Print
 	hex.print_board();
-	hex.print_graph();
+//	hex.print_graph();
 
-	// Check if player 1 (player blue, B, X) has won
+// Check if player 1 (player blue, B, X) has won
 	hex.west_to_east();
 	// Check if player 2 (player red, R, X) has won
-	hex.north_to_south();
+	hex.north_to_south();	//hex.get_tablero()
 
 //	1. Draw the board using ASCII symbols and a given size, such as 7 by 7 or 11 by 11.
 

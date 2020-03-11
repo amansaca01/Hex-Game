@@ -14,7 +14,7 @@
 using namespace std;
 
 board::board(const int &board_size) :
-		board_size(board_size), tablero(pow(board_size, 2), 0), camino(tablero) {
+		board_size(board_size), tablero(pow(board_size, 2), 0) {
 //	for (int a = 0; a < tablero.V() - 1; a++) {
 //		if (((a + 1) % board_size) > 0)
 //			tablero.add_edge(a, a + 1, 1);
@@ -51,13 +51,30 @@ color board::get_color(const int &node) {
 }
 
 void board::set_color(const int &node, const color &col) {
+
 	// rellena el vector node_color. No hace nada más
 	tablero.set_node_color(node, col);
-	// hay que editar la matriz de adyacencia en consecuencia
-	// revisar si esto es necesario, o puedo usar la clase game
-	int near_node = node - 1;
-	if (tablero.get_node_color(near_node) == col) {
-		tablero.add_edge(node, near_node);
+
+	// edita la matriz de adyacencia en consecuencia
+//	int near_node = node - 1;
+//	if (tablero.get_node_color(near_node) == col) {
+//		tablero.add_edge(node, near_node, 1);
+//	}
+	vector<int> near_nodes;
+	// arriba
+	near_nodes.push_back(node - board_size);
+	near_nodes.push_back(node - board_size + 1);
+	// a los lados
+	near_nodes.push_back(node - 1);
+	near_nodes.push_back(node + 1);
+	// abajo
+	near_nodes.push_back(node + board_size - 1);
+	near_nodes.push_back(node + board_size);
+
+	for (int &it : near_nodes) {
+		if (tablero.get_node_color(it) == col) {
+			tablero.add_edge(node, it, 1);
+		}
 	}
 }
 
@@ -69,8 +86,8 @@ void board::print_board() {
 
 	std::map<color, const char*> marker;
 	marker.insert(std::make_pair(WHITE, "."));
-	marker.insert(std::make_pair(RED, "x"));
-	marker.insert(std::make_pair(BLUE, "o"));
+	marker.insert(std::make_pair(RED, "R"));
+	marker.insert(std::make_pair(BLUE, "B"));
 
 	auto print_repeat = [] (int n,std::string x) {
 		while (n--)
@@ -98,23 +115,30 @@ void board::print_board() {
 	std::cout << std::endl;
 	print_repeat(board_size, "  ");
 	for (auto i : rows)
-		std::cout << char(i + 65) << "   ";
+		std::cout << i + 1 << "   ";
 	std::cout << std::endl;
 	std::cout << std::endl;
 }
 
 void board::north_to_south() {
 	// Ver si existe un camino de Norte a Sur (north_to_south)
+	ShortestPath camino(tablero);
 	for (int i = 0; i < board_size; ++i) {
 		for (int j = board_size; j > 0; --j) {
 			int north = i;
 			int south = tablero.V() - j;
 			int distance = camino.path_size(north, south);
-			cout << "La distancia de " << north << " a " << south << " es "
-					<< distance << endl;
 			if (distance != -1) {
-				cout << "GAME OVER" << endl;
-				cout << "The winner is player red (2 - R - O)" << endl;
+				cout << "---> GAME OVER <---" << endl;
+//				cout << "La distancia de " << north << " a " << south << " es "
+//						<< distance << endl;
+				cout << "There is a red path from (" << (north / board_size) + 1
+						<< "," << (north % board_size) + 1 << ") to ("
+						<< (south / board_size) + 1 << ","
+						<< (south % board_size) + 1 << ") of distance "
+						<< distance << "." << endl;
+				cout << "The winner is player 2: the red player (R)." << endl;
+				exit(EXIT_SUCCESS);
 			}
 		}
 	}
@@ -122,16 +146,23 @@ void board::north_to_south() {
 
 void board::west_to_east() {
 	// Ver si existe un camino de Oeste a Este (west_to_east)
+	ShortestPath camino(tablero);
 	for (int i = 0; i < board_size; ++i) {
 		for (int j = 1; j < board_size + 1; ++j) {
 			int west = i * board_size;
 			int east = (j * board_size) - 1;
 			int distance = camino.path_size(west, east);
-			cout << "La distancia de " << west << " a " << east << " es "
-					<< distance << endl;
 			if (distance != -1) {
-				cout << "GAME OVER" << endl;
-				cout << "The winner is player blue (1 - B - X)" << endl;
+				cout << "---> GAME OVER <---" << endl;
+//			cout << "La distancia de " << west << " a " << east << " es "
+//					<< distance << endl;
+				cout << "There is a red path from (" << (west / board_size) + 1
+						<< "," << (west % board_size) + 1 << ") to ("
+						<< (east / board_size) + 1 << ","
+						<< (east % board_size) + 1 << ") of distance "
+						<< distance << "." << endl;
+				cout << "The winner is player 1: the blue player (B)." << endl;
+				exit(EXIT_SUCCESS);
 			}
 		}
 	}
