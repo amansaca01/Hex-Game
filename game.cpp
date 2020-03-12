@@ -32,17 +32,19 @@ void game::play() {
 }
 
 square game::read_move() {
-	char x, y;
+	char x;
+	int y;
 
 	std::cout << std::endl << "Your move: ";
 	std::cin >> x >> y;
 	if (x > 96)
 		x = char(x - 32);
 
-	square move = std::make_pair(x - 65, y - '1');
+	square move = std::make_pair(x - 65, y - 1);
 
 	if (!hex_board.is_free_square(move)) {
 		std::cout << "Your move should something like: A1" << std::endl;
+		std::cin.clear();
 		move = read_move();
 	}
 	return move;
