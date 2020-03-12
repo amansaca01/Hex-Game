@@ -7,6 +7,7 @@
 
 #include<vector>
 #include <string>
+#include "random.h"
 
 #ifndef GRAPH_H_
 #define GRAPH_H_
@@ -25,8 +26,6 @@ public:
 			const pairs &range = std::make_pair(1, 10));
 	virtual ~graph() = default;
 
-	float prob();
-	int prob_int(const pairs &range);
 	int V() const; //returns the number of vertices in the graph
 	int E(); //returns the number of edges in the graph
 	bool adjacent(const int &x, const int &y) const; //tests whether there is an edge from node x to node y.
@@ -51,6 +50,7 @@ private:
 	std::vector<color> node_color;
 	int size; // number of nodes
 	pairs range; // pair containing upper and lower edges distance range
+	random_gen randomize;
 };
 
 #endif /* GRAPH_H_ */

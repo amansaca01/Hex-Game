@@ -22,7 +22,7 @@ graph::graph(const int &size, const float &density, const pairs &range) :
 
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < i; ++j) {
-			if (prob() < density) {
+			if (randomize.prob() < density) {
 				add_edge(i, j);
 			}
 		}
@@ -48,15 +48,6 @@ graph::graph(const string file_name, const pairs &range) :
 		add_edge(x, y, distance);
 	}
 
-}
-
-float graph::prob() {
-	return rand() / static_cast<float>(RAND_MAX);
-}
-
-int graph::prob_int(const pairs &range) {
-	int total_range = range.second - range.first + 1;
-	return (rand() % total_range) + range.first;
 }
 
 int graph::V() const {
@@ -105,7 +96,7 @@ std::vector<int> graph::neighbors(const int &x, const color &col) {
 }
 
 void graph::add_edge(const int &x, const int &y) {
-	add_edge(x, y, prob_int(range));
+	add_edge(x, y, randomize.prob_int(range.first,range.second));
 }
 
 void graph::add_edge(const int &x, const int &y, const int &distance) {

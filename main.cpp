@@ -1,8 +1,10 @@
 #include "game.h"
 #include<iostream>
+#include "random.h"
 
 int main() {
 
+	random_gen cosa;
 	game hex(7);
 	//hex.print_board();
 

@@ -9,6 +9,7 @@
 #define GAME_H_
 
 #include "board.h"
+#include "random.h"
 
 
 class game {
@@ -20,10 +21,11 @@ public:
 	void reset();
 	square read_move();
 	square random_move();
-	void make_move(const int &x, const int &y);
-	int next_turn();
+	void make_move(const square &move);
+	void next_turn();
 private:
 	board hex_board;
+	random_gen randomize;
 	int player = 1;
 	int rounds = 0;
 };

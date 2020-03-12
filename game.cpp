@@ -6,6 +6,7 @@
  */
 
 #include "game.h"
+
 #include<iostream>
 
 game::game(const int &board_size) :
@@ -15,13 +16,16 @@ game::game(const int &board_size) :
 void game::play() {
 	square move;
 	while (player != -1) {
-		std::cout << player << std::endl;
+
 		if (player) {
-
+			hex_board.print_board();
 			move = read_move();
-			std::cout << move.first << " " << move.second;
-
+		} else{
+			move = random_move();
 		}
+
+
+		make_move(move);
 		next_turn();
 	}
 
@@ -35,8 +39,7 @@ square game::read_move() {
 	if (x > 96)
 		x = char(x - 32);
 
-	square move = std::make_pair(x - 65, y -'1');
-	std::cout << move.second << std::endl;
+	square move = std::make_pair(x - 65, y - '1');
 
 	if (!hex_board.is_free_square(move)) {
 		std::cout << "Your move should something like: A1" << std::endl;
@@ -45,20 +48,27 @@ square game::read_move() {
 	return move;
 }
 
+square game::random_move() {
+
+	int x = randomize.prob_int(0,hex_board.size()-1);
+	int y = randomize.prob_int(0,hex_board.size()-1);
+
+	return std::make_pair(x,y);
+}
+
 void game::reset() {
 	player = 0;
 	rounds = 0;
 	hex_board.reset();
 }
 
-void game::make_move(const int &x, const int &y) {
-	int node = x + hex_board.size() * y;
-	int player = next_turn() + 1;
-	color col = (color) player;
-	hex_board.set_color(node, col);
+void game::make_move(const square &move) {
+	color col = (color) (player+1);
+	std::cout << "Player " <<col << " "<<move.first << " " << move.second << std::endl;
+	hex_board.set_color(move, col);
 }
 
-int game::next_turn() {
-	return player++ % 2;
+void game::next_turn() {
+	 player=(player+1) % 2;
 }
 

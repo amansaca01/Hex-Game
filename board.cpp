@@ -45,11 +45,13 @@ int board::get_node(const square &move) {
 	return -1;
 }
 
-color board::get_color(const int &node) {
+color board::get_color(const square &move) {
+	int node = get_node(move);
 	return tablero.get_node_color(node);
 }
 
-void board::set_color(const int &node, color &col) {
+void board::set_color(const square &move, color &col) {
+	int node = get_node(move);
 	return tablero.set_node_color(node, col);
 }
 
@@ -114,7 +116,7 @@ bool board::is_square(const square &move) {
 bool board::is_free_square(const square &move) {
 	if (!is_square(move))
 		return false;
-	if (get_color(get_node(move)) != WHITE) {
+	if (get_color(move) != WHITE) {
 		std::cout << "Square " << move.first << move.second
 				<< " is already in use." << std::endl;
 		return false;

@@ -19,8 +19,8 @@ public:
 	int size();
 	void reset();
 	int get_node(const square &move);
-	color get_color(const int &node);
-	void set_color(const int &node, color &col);
+	color get_color(const square &move);
+	void set_color(const square &move, color &col);
 	void print_graph();
 	void print_board();
 	bool is_square(const square &move);
