@@ -9,6 +9,7 @@
 #define BOARD_H_
 
 #include "graph.h"
+#include "shortest_path.h"
 
 typedef std::pair<int, int> square;
 
@@ -25,6 +26,7 @@ public:
 	void print_board();
 	bool is_square(const square &move);
 	bool is_free_square(const square &move);
+	ShortestPath connections();
 
 
 	virtual ~board() = default;

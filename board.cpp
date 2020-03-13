@@ -12,13 +12,13 @@
 #include <map>
 
 board::board(const int &board_size) :
-		board_size(board_size), tablero(pow(board_size, 2) - 1, 0) {
+		board_size(board_size), tablero(pow(board_size, 2) , 0) {
 
 	for (int a = 0; a < tablero.V() - 1; a++) {
 		if (((a + 1) % board_size) > 0)
 			tablero.add_edge(a, a + 1, 1);
 		if ((a + board_size) < tablero.V()) {
-			if ((a % board_size) > 0 && (a + board_size - 1) < tablero.V()) {
+			if ((a % board_size) > 0 ) {
 				tablero.add_edge(a, a + board_size - 1, 1);
 			}
 			tablero.add_edge(a, a + board_size, 1);
@@ -124,3 +124,6 @@ bool board::is_free_square(const square &move) {
 	return true;
 }
 
+ShortestPath board::connections(){
+	return ShortestPath(tablero);
+}

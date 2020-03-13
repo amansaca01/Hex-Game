@@ -11,6 +11,7 @@
 #include "board.h"
 #include "random.h"
 
+#include<map>
 
 class game {
 public:
@@ -22,10 +23,14 @@ public:
 	square read_move();
 	square random_move();
 	void make_move(const square &move);
-	void next_turn();
+	int next_turn();
+	bool winner();
+	color player_color();
 private:
 	board hex_board;
 	random_gen randomize;
+	std::map<color, std::pair<std::vector<int>,std::vector<int>>> sides;
+	//std::vector<std::pair<std::vector<int>,std::vector<int>>> sides;
 	int player = 1;
 	int rounds = 0;
 };
