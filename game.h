@@ -18,6 +18,8 @@ public:
 	game(const int &board_size = 11);
 	virtual ~game() = default;
 
+	void instructions();
+	void select_color();
 	void play();
 	void reset();
 	square read_move();
@@ -26,9 +28,12 @@ public:
 	int next_turn();
 	bool winner();
 	color player_color();
+	color player_color(const int &a);
+
 private:
 	board hex_board;
 	random_gen randomize;
+	color selected_color;
 	std::map<color, std::pair<std::vector<int>,std::vector<int>>> sides;
 	//std::vector<std::pair<std::vector<int>,std::vector<int>>> sides;
 	int player = 1;

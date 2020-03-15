@@ -14,35 +14,49 @@
 game::game(const int &board_size) :
 		hex_board(board_size) {
 
-	std::map<color, std::pair<std::vector<int>, std::vector<int>>> marker;
+	std::vector<int> upper_side,lower_side,left_side,right_side;
 
-	std::vector<int> line(board_size);
+	for (int i = 1; i <= board_size; ++i) {
+		upper_side.push_back(i-1);
+		lower_side.push_back(pow(board_size, 2) - i);
+		left_side.push_back((i-1) * board_size);
+		right_side.push_back(i * board_size - 1);
+	}
 
-	std::iota(line.begin(), line.end(), 0);
-	std::vector<int> left_side = line;
+	sides[RED] = make_pair(upper_side, lower_side);
+	sides[BLUE] = make_pair(left_side, right_side);
 
-	std::iota(line.begin(), line.end(), pow(board_size, 2) - 1);
-	std::vector<int> right_side = line;
-
-	sides[RED] = make_pair(left_side, right_side);
-
-	int i = 0;
-	std::iota(line.begin(), line.end(), i = i + board_size);
-	std::vector<int> upper_side = line;
-
-	i = board_size - 1;
-	std::iota(line.begin(), line.end(), i = i + board_size);
-	std::vector<int> lower_side = line;
-
-	sides[BLUE] = make_pair(upper_side, lower_side);
+	instructions();
+	select_color();
 
 }
 
+void game::instructions(){
+	hex_board.print_board();
+	std::cout << "Instructions:" << std::endl;
+	std::cout << "* Blue (o) must go from left to right side." << std::endl;
+	std::cout << "* Red (x) must go from upper to lower side." << std::endl;
+	std::cout << "* Blue (o) begins the game." << std::endl;
+	std::cout << "* Columns are marked by letters and rows by numbers." << std::endl;
+	std::cout << "* Insert your move by tiping the column and then the row (i.e, A1)." << std::endl<< std::endl;
+}
+
+void game::select_color(){
+	int selection;
+	std::cout << "1. Red" << std::endl;
+	std::cout << "2. Blue" << std::endl<< std::endl;
+
+	std::cout << "Choose your color:" ;
+	std::cin >> selection ;
+	selected_color = player_color(selection-1);
+}
+
 void game::play() {
+
 	square move;
 	while (player != -1) {
 
-		if (player) {
+		if (player_color()==selected_color) {
 			hex_board.print_board();
 			move = read_move();
 		} else {
@@ -79,7 +93,12 @@ square game::random_move() {
 	int x = randomize.prob_int(0, hex_board.size() - 1);
 	int y = randomize.prob_int(0, hex_board.size() - 1);
 
-	return std::make_pair(x, y);
+	pairs move = std::make_pair(x,y);
+
+	if (!hex_board.is_free_square(move))
+		move = random_move();
+
+	return move;
 }
 
 void game::reset() {
@@ -90,8 +109,6 @@ void game::reset() {
 
 void game::make_move(const square &move) {
 	color col = player_color();
-	std::cout << "Player " << col << " " << move.first << " " << move.second
-			<< std::endl;
 	hex_board.set_color(move, col);
 }
 
@@ -104,12 +121,23 @@ int game::next_turn() {
 bool game::winner() {
 
 	auto side = sides[player_color()];
-	if (hex_board.connections().connected_sides(side, player_color()) > 0)
-		return true;
+	if (hex_board.connections().connected_sides(side, player_color()) > 0){
+		hex_board.print_board();
+
+		(player_color() == selected_color) ?
+				std::cout << std::endl << ">>>> CONGRATULATIONS! <<<<<" << std::endl :
+				std::cout << std::endl << ">>>> GAME OVER! <<<<<" << std::endl;
+
+
+		return true;}
 
 	return false;
 }
 
 color game::player_color() {
 	return (color) (player + 1);
+}
+
+color game::player_color(const int &a) {
+	return (color) (a + 1);
 }
