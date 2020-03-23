@@ -9,11 +9,10 @@
 #define BOARD_H_
 
 #include "graph.h"
-#include "shortest_path.h"
 
 typedef std::pair<int, int> square;
 
-class board {
+class board : public graph{
 public:
 	board(const int &board_size = 11);
 
@@ -22,17 +21,13 @@ public:
 	int get_node(const square &move);
 	color get_color(const square &move);
 	void set_color(const square &move, color &col);
-	void print_graph();
 	void print_board();
 	bool is_square(const square &move);
 	bool is_free_square(const square &move);
-	ShortestPath connections();
-
 
 	virtual ~board() = default;
 private:
 	int board_size;
-	graph tablero;
 };
 
 #endif /* BOARD_H_ */

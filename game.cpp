@@ -12,7 +12,7 @@
 #include <math.h>
 
 game::game(const int &board_size) :
-		hex_board(board_size) {
+		hex_board(board_size),connections(hex_board) {
 
 	std::vector<int> upper_side,lower_side,left_side,right_side;
 
@@ -121,13 +121,12 @@ int game::next_turn() {
 bool game::winner() {
 
 	auto side = sides[player_color()];
-	if (hex_board.connections().connected_sides(side, player_color()) > 0){
+	if (connections.connected_sides(side, player_color()) > 0){
 		hex_board.print_board();
 
 		(player_color() == selected_color) ?
 				std::cout << std::endl << ">>>> CONGRATULATIONS! <<<<<" << std::endl :
 				std::cout << std::endl << ">>>> GAME OVER! <<<<<" << std::endl;
-
 
 		return true;}
 

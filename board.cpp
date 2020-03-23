@@ -12,19 +12,19 @@
 #include <map>
 
 board::board(const int &board_size) :
-		board_size(board_size), tablero(pow(board_size, 2) , 0) {
+		graph(pow(board_size, 2) , 0),board_size(board_size) {
 
-	for (int a = 0; a < tablero.V() - 1; a++) {
+	for (int a = 0; a < V() - 1; a++) {
 		if (((a + 1) % board_size) > 0)
-			tablero.add_edge(a, a + 1, 1);
-		if ((a + board_size) < tablero.V()) {
+			add_edge(a, a + 1, 1);
+		if ((a + board_size) < V()) {
 			if ((a % board_size) > 0 ) {
-				tablero.add_edge(a, a + board_size - 1, 1);
+				add_edge(a, a + board_size - 1, 1);
 			}
-			tablero.add_edge(a, a + board_size, 1);
+			add_edge(a, a + board_size, 1);
 		}
 	}
-	tablero.add_edge(tablero.V() - 2, tablero.V() - 1, 1);
+	add_edge(V() - 2, V() - 1, 1);
 }
 
 int board::size() {
@@ -32,13 +32,13 @@ int board::size() {
 }
 
 void board::reset() {
-	for (int x = 0; x < tablero.V(); ++x)
-		tablero.set_node_color(x, WHITE);
+	for (int x = 0; x < V(); ++x)
+		set_node_color(x, WHITE);
 }
 
 int board::get_node(const square &move) {
 	int node = move.second * board_size + move.first;
-	if (node < tablero.V())
+	if (node < V())
 		return node;
 	else
 		std::cout << "Coordinates (" << move.first << "," << move.second << ") are out of bounds.";
@@ -47,16 +47,13 @@ int board::get_node(const square &move) {
 
 color board::get_color(const square &move) {
 	int node = get_node(move);
-	return tablero.get_node_color(node);
+	return get_node_color(node);
 }
 
 void board::set_color(const square &move, color &col) {
 	int node = get_node(move);
-	return tablero.set_node_color(node, col);
-}
-
-void board::print_graph() {
-	return tablero.print_graph();
+	set_node_color(node, col);
+	return;
 }
 
 void board::print_board() {
@@ -80,11 +77,11 @@ void board::print_board() {
 		print_repeat(int(i < 9) + i * 2, " ");
 
 		while (j < board_size * (i + 1) - 1) {
-			std::cout << marker[tablero.get_node_color(j++)] << " " << u8"—"<<" ";
+			std::cout << marker[get_node_color(j++)] << " " << u8"—"<<" ";
 		}
-		std::cout << marker[tablero.get_node_color(j++)] << std::endl;
+		std::cout << marker[get_node_color(j++)] << std::endl;
 		print_repeat(i * 2 + 3, " ");
-		if (j < tablero.V()) {
+		if (j < V()) {
 			print_repeat(board_size - 1, "\\ / ");
 			std::cout << "\\" << std::endl;
 		}
@@ -124,6 +121,3 @@ bool board::is_free_square(const square &move) {
 	return true;
 }
 
-ShortestPath board::connections(){
-	return ShortestPath(tablero);
-}

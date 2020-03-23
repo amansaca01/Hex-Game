@@ -43,7 +43,7 @@ public:
 	void set_node_color(const int &x, const color &col);
 	bool is_looped();
 	int tree_cost(); // return the sum of all edge values
-	void print_graph();
+	void print_graph() const;
 
 private:
 	std::vector<std::vector<int>> ad_matrix; // connectivity matrices are used

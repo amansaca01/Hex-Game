@@ -57,7 +57,6 @@ int PriorityQueue::size() {
 
 int PriorityQueue::get_priority(const int &node) {
 	return node_priority.at(node);
-
 }
 
 void PriorityQueue::priority_sort() {

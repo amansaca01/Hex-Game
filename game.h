@@ -10,6 +10,7 @@
 
 #include "board.h"
 #include "random.h"
+#include "shortest_path.h"
 
 #include<map>
 
@@ -32,10 +33,10 @@ public:
 
 private:
 	board hex_board;
+	ShortestPath connections;
 	random_gen randomize;
 	color selected_color;
 	std::map<color, std::pair<std::vector<int>,std::vector<int>>> sides;
-	//std::vector<std::pair<std::vector<int>,std::vector<int>>> sides;
 	int player = 1;
 	int rounds = 0;
 };
