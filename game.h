@@ -10,7 +10,7 @@
 
 #include "board.h"
 #include "random.h"
-#include "shortest_path.h"
+#include "hex_path.h"
 
 #include<map>
 
@@ -26,19 +26,17 @@ public:
 	square read_move();
 	square random_move();
 	void make_move(const square &move);
-	int next_turn();
+	void next_turn();
 	bool winner();
 	color player_color();
 	color player_color(const int &a);
 
 private:
 	board hex_board;
-	ShortestPath connections;
+	std::vector<HexPath> paths;
 	random_gen randomize;
 	color selected_color;
-	std::map<color, std::pair<std::vector<int>,std::vector<int>>> sides;
-	int player = 1;
-	int rounds = 0;
+	int player = 0;
 };
 
 #endif /* GAME_H_ */

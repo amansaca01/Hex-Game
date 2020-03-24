@@ -6,44 +6,42 @@
  */
 
 #include "hex_path.h"
+#include<iostream> //borrar
 
-HexPath::HexPath(const board &B, const color &col, const board_sides &sides) :
+HexPath::HexPath(board* B, const color &col, const board_sides &sides) :
 		hex_board(B), col(col), sides(sides) {
-	connections.resize(hex_board.V(), 0);
+	connections.resize(hex_board->V(), 0);
 }
 
-bool HexPath::check_new(const int &new_node) {
+bool HexPath::check_paths() {
 
-	if (get_node_color(origin) != col || get_node_color(new_node) != col)
-		return false;
+	std::fill(connections.begin(), connections.end(), -1);
 
 	for (auto &origin : sides.first) {
-		if (is_connected(origin, new_node))
-			return is_connected(x, sides.second);
-
+		if (connections.at(origin) < 0
+				&& hex_board->get_node_color(origin) == col) {
+			connections.at(origin) = origin;
+			for (auto &target : sides.second) {
+				if (hex_board->get_node_color(target) == col)
+					if (check_neighbors(origin, origin, target)) {
+						return true;
+					}
+			}
+		}
 	}
 	return false;
 }
 
-bool HexPath::is_connected(const int &x, const int &y) {
+bool HexPath::check_neighbors(const int &node, const int &origin,
+		const int &target) {
 
-	if (get_node_color(x) != col || get_node_color(y) != col)
-		return false;
-
-	check_neighbours(hex_board.neighbors(x, col), x, y);
-
-	return false;
-}
-
-bool HexPath::check_neighbours(const std::vector<int> &adjacents,
-		const int &origin, const int &target) {
-
-	for (auto &node : adjacents) {
-		if (connections.at(node) == 0) {
-			connections.at(node) = origin;
-			if (node == target
-					|| check_neighbours(hex_board.neighbors(node, col), origin,
-							target))
+	std::vector<int> adjacents = hex_board->neighbors(node, col);
+	for (auto &ad : adjacents) {
+		if (ad == target)
+			return true;
+		if (connections.at(ad) < 0) {
+			connections.at(ad) = origin;
+			if (check_neighbors(ad, origin, target))
 				return true;
 		}
 	}
