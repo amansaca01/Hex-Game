@@ -66,7 +66,8 @@ void game::play() {
 			hex_board.print_board();
 			move = read_move();
 		} else {
-			move = random_move();
+			//move = random_move();
+			move = choose_move();
 		}
 
 		make_move(move);
@@ -106,8 +107,7 @@ void game::reset() {
 }
 
 void game::make_move(const square &move) {
-	color col = player_color();
-	hex_board.set_color(move, col);
+	hex_board.set_color(move, player_color());
 }
 
 void game::next_turn() {
@@ -131,6 +131,42 @@ bool game::winner() {
 	return false;
 }
 
+square game::choose_move() {
+	auto squares = hex_board.free_squares();
+	int blanks = squares.size();
+	std::vector<int> points;
+
+	for (auto &move : squares) {
+		points.push_back(eval_move(move, player_color(), blanks));
+	}
+
+	return squares[0];
+}
+
+int game::eval_move(const square &move, const color &col, const int &blanks) {
+
+	hex_board.mock_colors();
+	int n = 5000;
+	int wins = 0;
+	int turn;
+
+	for (int i = 0; i < n; ++i) {
+		hex_board.reset_colors();
+		turn = col - 1;
+		hex_board.set_color(move, col);
+		for (int j = 1; j < blanks; ++j) {
+			turn = (turn + 1) % 2;
+			hex_board.set_color(random_move(), player_color(turn));
+		}
+		if (paths.at(col-1).check_paths())
+			wins++;
+		hex_board.reset_colors();
+	}
+	std::cout << move.first << " " << move.second << " " << wins << std::endl;
+
+	return wins / n;
+}
+
 color game::player_color() {
 	return (color) (player + 1);
 }
@@ -138,3 +174,4 @@ color game::player_color() {
 color game::player_color(const int &a) {
 	return (color) (a + 1);
 }
+

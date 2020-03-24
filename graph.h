@@ -45,9 +45,11 @@ public:
 	int tree_cost(); // return the sum of all edge values
 	void print_graph() const;
 
+protected:
+	std::vector<color> node_color;
+
 private:
 	std::vector<std::vector<int>> ad_matrix; // connectivity matrices are used
-	std::vector<color> node_color;
 	int size; // number of nodes
 	pairs range; // pair containing upper and lower edges distance range
 	random_gen randomize;

@@ -28,6 +28,8 @@ public:
 	void make_move(const square &move);
 	void next_turn();
 	bool winner();
+	square choose_move();
+	int eval_move(const square &move, const color &col, const int &blanks);
 	color player_color();
 	color player_color(const int &a);
 

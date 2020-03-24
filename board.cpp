@@ -10,7 +10,6 @@
 #include <math.h>
 #include <numeric>
 
-
 board::board(const int &board_size) :
 		graph(pow(board_size, 2), 0), board_size(board_size) {
 
@@ -40,7 +39,7 @@ void board::reset() {
 		set_node_color(x, WHITE);
 }
 
-int board::get_node(const square &move) {
+int board::get_node(const square &move) const {
 	int node = move.second * board_size + move.first;
 	if (node < V())
 		return node;
@@ -50,12 +49,12 @@ int board::get_node(const square &move) {
 	return -1;
 }
 
-color board::get_color(const square &move) {
+color board::get_color(const square &move) const {
 	int node = get_node(move);
 	return get_node_color(node);
 }
 
-void board::set_color(const square &move, color &col) {
+void board::set_color(const square &move, const color &col) {
 	int node = get_node(move);
 	set_node_color(node, col);
 	return;
@@ -131,3 +130,13 @@ std::vector<square> board::free_squares() {
 	return squares;
 }
 
+void board::mock_colors() {
+	original_colors = node_color;
+	return;
+}
+
+
+void board::reset_colors() {
+	node_color=original_colors;
+	return;
+}
