@@ -9,22 +9,26 @@
 #include<iostream>
 #include <math.h>
 #include <numeric>
-#include <map>
+
 
 board::board(const int &board_size) :
-		graph(pow(board_size, 2) , 0),board_size(board_size) {
+		graph(pow(board_size, 2), 0), board_size(board_size) {
 
 	for (int a = 0; a < V() - 1; a++) {
 		if (((a + 1) % board_size) > 0)
 			add_edge(a, a + 1, 1);
 		if ((a + board_size) < V()) {
-			if ((a % board_size) > 0 ) {
+			if ((a % board_size) > 0) {
 				add_edge(a, a + board_size - 1, 1);
 			}
 			add_edge(a, a + board_size, 1);
 		}
 	}
 	add_edge(V() - 2, V() - 1, 1);
+
+	marker.insert(std::make_pair(WHITE, "."));
+	marker.insert(std::make_pair(RED, "x"));
+	marker.insert(std::make_pair(BLUE, "o"));
 }
 
 int board::size() {
@@ -41,7 +45,8 @@ int board::get_node(const square &move) {
 	if (node < V())
 		return node;
 	else
-		std::cout << "Coordinates (" << move.first << "," << move.second << ") are out of bounds.";
+		std::cout << "Coordinates (" << move.first << "," << move.second
+				<< ") are out of bounds.";
 	return -1;
 }
 
@@ -57,11 +62,6 @@ void board::set_color(const square &move, color &col) {
 }
 
 void board::print_board() {
-
-	std::map<color, const char*> marker;
-	marker.insert(std::make_pair(WHITE, "."));
-	marker.insert(std::make_pair(RED, "x"));
-	marker.insert(std::make_pair(BLUE, "o"));
 
 	auto print_repeat = [] (int n,std::string x) {
 		while (n--)
@@ -114,10 +114,20 @@ bool board::is_free_square(const square &move) {
 	if (!is_square(move))
 		return false;
 	if (get_color(move) != WHITE) {
-		std::cout << "Square " << move.first << move.second
-				<< " is already in use." << std::endl;
 		return false;
 	}
 	return true;
+}
+
+std::vector<square> board::free_squares() {
+	std::vector<square> squares;
+	square move;
+	for (int x = 0; x < size(); x++)
+		for (int y = 0; y < size(); y++) {
+			move = std::make_pair(x, y);
+			if (is_free_square(move))
+				squares.push_back(move);
+		}
+	return squares;
 }
 

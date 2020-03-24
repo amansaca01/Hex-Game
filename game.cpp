@@ -23,8 +23,10 @@ game::game(const int &board_size) :
 		right_side.push_back(i * board_size - 1);
 	}
 
-	paths.push_back(HexPath(&hex_board, RED, make_pair(upper_side, lower_side)));
-	paths.push_back(HexPath(&hex_board, BLUE, make_pair(left_side, right_side)));
+	paths.push_back(
+			HexPath(&hex_board, RED, make_pair(upper_side, lower_side)));
+	paths.push_back(
+			HexPath(&hex_board, BLUE, make_pair(left_side, right_side)));
 
 	instructions();
 	select_color();
@@ -84,7 +86,9 @@ square game::read_move() {
 	square move = std::make_pair(x - 65, y - 1);
 
 	if (!hex_board.is_free_square(move)) {
-		std::cout << "Your move should something like: A1" << std::endl;
+		std::cout << "Square " << move.first << move.second
+				<< " is already in use." << std::endl
+				<< "Your move should something like: A1" << std::endl;
 		std::cin.clear();
 		move = read_move();
 	}
@@ -92,16 +96,8 @@ square game::read_move() {
 }
 
 square game::random_move() {
-
-	int x = randomize.prob_int(0, hex_board.size() - 1);
-	int y = randomize.prob_int(0, hex_board.size() - 1);
-
-	pairs move = std::make_pair(x, y);
-
-	if (!hex_board.is_free_square(move))
-		move = random_move();
-
-	return move;
+	auto moves = hex_board.free_squares();
+	return moves.at(randomize.prob_int(0, moves.size() - 1));
 }
 
 void game::reset() {

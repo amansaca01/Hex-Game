@@ -9,6 +9,8 @@
 #define BOARD_H_
 
 #include "graph.h"
+#include <vector>
+#include <map>
 
 typedef std::pair<int, int> square;
 
@@ -24,10 +26,12 @@ public:
 	void print_board();
 	bool is_square(const square &move);
 	bool is_free_square(const square &move);
+	std::vector<square> free_squares();
 
 	virtual ~board() = default;
 private:
 	int board_size;
+	std::map<color, const char*> marker;
 };
 
 #endif /* BOARD_H_ */
