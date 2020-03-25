@@ -124,11 +124,21 @@ std::vector<square> board::free_squares() {
 	for (int x = 0; x < size(); x++)
 		for (int y = 0; y < size(); y++) {
 			move = std::make_pair(x, y);
-			if (is_free_square(move))
+			if (get_color(move)==WHITE)
 				squares.push_back(move);
 		}
 	return squares;
 }
+
+
+//std::vector<int> board::free_nodes() {
+//
+//	IsWhite = [](color i){i==WHITE);
+//
+//	auto nodes = std::find_if(node_color.begin(),node_color.end(),IsWhite);
+//	return squares;
+//}
+
 
 void board::mock_colors() {
 	original_colors = node_color;
