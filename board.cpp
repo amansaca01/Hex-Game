@@ -49,14 +49,20 @@ int board::get_node(const square &move) const {
 	return -1;
 }
 
+square board::get_square(const int &node) const{
+	int x = node % board_size;
+	int y = node / board_size;
+
+	return(std::make_pair(x,y));
+}
+
+
 color board::get_color(const square &move) const {
-	int node = get_node(move);
-	return get_node_color(node);
+	return get_node_color(get_node(move));
 }
 
 void board::set_color(const square &move, const color &col) {
-	int node = get_node(move);
-	set_node_color(node, col);
+	set_node_color(get_node(move), col);
 	return;
 }
 
@@ -121,32 +127,29 @@ bool board::is_free_square(const square &move) {
 std::vector<square> board::free_squares() {
 	std::vector<square> squares;
 	square move;
-	for (int x = 0; x < size(); x++)
-		for (int y = 0; y < size(); y++) {
+	for (int x = 0; x < size(); ++x)
+		for (int y = 0; y < size(); ++y) {
 			move = std::make_pair(x, y);
-			if (get_color(move)==WHITE)
+			if (get_color(move) == WHITE)
 				squares.push_back(move);
 		}
 	return squares;
 }
 
-
-//std::vector<int> board::free_nodes() {
-//
-//	IsWhite = [](color i){i==WHITE);
-//
-//	auto nodes = std::find_if(node_color.begin(),node_color.end(),IsWhite);
-//	return squares;
-//}
-
+std::vector<int> board::free_nodes() {
+	std::vector<int> nodes;
+	for (int n = 0; n < V(); ++n)
+		if (get_node_color(n) == WHITE)
+			nodes.push_back(n);
+	return nodes;
+}
 
 void board::mock_colors() {
 	original_colors = node_color;
 	return;
 }
 
-
 void board::reset_colors() {
-	node_color=original_colors;
+	node_color = original_colors;
 	return;
 }

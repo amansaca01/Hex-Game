@@ -29,7 +29,7 @@ public:
 	void next_turn();
 	bool winner();
 	square choose_move();
-	int eval_move(const square &move, const color &col, const int &blanks);
+	int eval_move(  std::vector<int>::iterator node_it, const color &col);
 	color player_color();
 	color player_color(const int &a);
 
@@ -39,6 +39,7 @@ private:
 	random_gen randomize;
 	color selected_color;
 	int player = 0;
+	std::vector<int> blank_nodes;
 };
 
 #endif /* GAME_H_ */

@@ -21,12 +21,14 @@ public:
 	int size();
 	void reset();
 	int get_node(const square &move) const;
+	square get_square(const int &node) const;
 	color get_color(const square &move) const;
 	void set_color(const square &move, const color &col);
 	void print_board();
 	bool is_square(const square &move);
 	bool is_free_square(const square &move);
 	std::vector<square> free_squares();
+	std::vector<int> free_nodes();
 	void mock_colors();
 	void reset_colors();
 

@@ -10,6 +10,7 @@
 #include<iostream>
 #include <numeric>
 #include <math.h>
+#include <algorithm>    // std::random_shuffle
 
 game::game(const int &board_size) :
 		hex_board(board_size) {
@@ -132,39 +133,45 @@ bool game::winner() {
 }
 
 square game::choose_move() {
-	auto squares = hex_board.free_squares();
-	int blanks = squares.size();
+	blank_nodes = hex_board.free_nodes();
 	std::vector<int> points;
 
-	for (auto &move : squares) {
-		points.push_back(eval_move(move, player_color(), blanks));
+	for (auto node = blank_nodes.begin(); node != blank_nodes.end(); ++node) {
+		points.push_back(eval_move(node, player_color()));
 	}
 
-	return squares[0];
+	auto best = std::max_element(points.begin(), points.end());
+
+	return hex_board.get_square(
+			blank_nodes.at(std::distance(points.begin(), best)));
 }
 
-int game::eval_move(const square &move, const color &col, const int &blanks) {
+int game::eval_move(std::vector<int>::iterator node_it, const color &col) {
 
 	hex_board.mock_colors();
-	int n = 5000;
+	std::vector<int> blanks = blank_nodes;
+	int n = 1000;
 	int wins = 0;
 	int turn;
 
 	for (int i = 0; i < n; ++i) {
-		hex_board.reset_colors();
+		std::random_shuffle(blanks.begin(), blanks.end());
+
 		turn = col - 1;
-		hex_board.set_color(move, col);
-		for (int j = 1; j < blanks; ++j) {
+		hex_board.set_node_color(*node_it, col);
+
+		for (auto &position : blanks) {
+			if (position == *node_it)
+				continue;
 			turn = (turn + 1) % 2;
-			hex_board.set_color(random_move(), player_color(turn));
+			hex_board.set_node_color(position, player_color(turn));
 		}
-		if (paths.at(col-1).check_paths())
+		if (paths.at(col - 1).check_paths())
 			wins++;
 		hex_board.reset_colors();
 	}
-	std::cout << move.first << " " << move.second << " " << wins << std::endl;
 
-	return wins / n;
+	return wins;
 }
 
 color game::player_color() {
