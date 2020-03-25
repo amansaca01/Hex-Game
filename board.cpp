@@ -9,22 +9,25 @@
 #include<iostream>
 #include <math.h>
 #include <numeric>
-#include <map>
 
 board::board(const int &board_size) :
-		board_size(board_size), tablero(pow(board_size, 2) , 0) {
+		graph(pow(board_size, 2), 0), board_size(board_size) {
 
-	for (int a = 0; a < tablero.V() - 1; a++) {
+	for (int a = 0; a < V() - 1; a++) {
 		if (((a + 1) % board_size) > 0)
-			tablero.add_edge(a, a + 1, 1);
-		if ((a + board_size) < tablero.V()) {
-			if ((a % board_size) > 0 ) {
-				tablero.add_edge(a, a + board_size - 1, 1);
+			add_edge(a, a + 1, 1);
+		if ((a + board_size) < V()) {
+			if ((a % board_size) > 0) {
+				add_edge(a, a + board_size - 1, 1);
 			}
-			tablero.add_edge(a, a + board_size, 1);
+			add_edge(a, a + board_size, 1);
 		}
 	}
-	tablero.add_edge(tablero.V() - 2, tablero.V() - 1, 1);
+	add_edge(V() - 2, V() - 1, 1);
+
+	marker.insert(std::make_pair(WHITE, "."));
+	marker.insert(std::make_pair(RED, "x"));
+	marker.insert(std::make_pair(BLUE, "o"));
 }
 
 int board::size() {
@@ -32,39 +35,38 @@ int board::size() {
 }
 
 void board::reset() {
-	for (int x = 0; x < tablero.V(); ++x)
-		tablero.set_node_color(x, WHITE);
+	for (int x = 0; x < V(); ++x)
+		set_node_color(x, WHITE);
 }
 
-int board::get_node(const square &move) {
+int board::get_node(const square &move) const {
 	int node = move.second * board_size + move.first;
-	if (node < tablero.V())
+	if (node < V())
 		return node;
 	else
-		std::cout << "Coordinates (" << move.first << "," << move.second << ") are out of bounds.";
+		std::cout << "Coordinates (" << move.first << "," << move.second
+				<< ") are out of bounds.";
 	return -1;
 }
 
-color board::get_color(const square &move) {
-	int node = get_node(move);
-	return tablero.get_node_color(node);
+square board::get_square(const int &node) const{
+	int x = node % board_size;
+	int y = node / board_size;
+
+	return(std::make_pair(x,y));
 }
 
-void board::set_color(const square &move, color &col) {
-	int node = get_node(move);
-	return tablero.set_node_color(node, col);
+
+color board::get_color(const square &move) const {
+	return get_node_color(get_node(move));
 }
 
-void board::print_graph() {
-	return tablero.print_graph();
+void board::set_color(const square &move, const color &col) {
+	set_node_color(get_node(move), col);
+	return;
 }
 
 void board::print_board() {
-
-	std::map<color, const char*> marker;
-	marker.insert(std::make_pair(WHITE, "."));
-	marker.insert(std::make_pair(RED, "x"));
-	marker.insert(std::make_pair(BLUE, "o"));
 
 	auto print_repeat = [] (int n,std::string x) {
 		while (n--)
@@ -80,11 +82,11 @@ void board::print_board() {
 		print_repeat(int(i < 9) + i * 2, " ");
 
 		while (j < board_size * (i + 1) - 1) {
-			std::cout << marker[tablero.get_node_color(j++)] << " " << u8"—"<<" ";
+			std::cout << marker[get_node_color(j++)] << " " << u8"—"<<" ";
 		}
-		std::cout << marker[tablero.get_node_color(j++)] << std::endl;
+		std::cout << marker[get_node_color(j++)] << std::endl;
 		print_repeat(i * 2 + 3, " ");
-		if (j < tablero.V()) {
+		if (j < V()) {
 			print_repeat(board_size - 1, "\\ / ");
 			std::cout << "\\" << std::endl;
 		}
@@ -117,13 +119,37 @@ bool board::is_free_square(const square &move) {
 	if (!is_square(move))
 		return false;
 	if (get_color(move) != WHITE) {
-		std::cout << "Square " << move.first << move.second
-				<< " is already in use." << std::endl;
 		return false;
 	}
 	return true;
 }
 
-ShortestPath board::connections(){
-	return ShortestPath(tablero);
+std::vector<square> board::free_squares() {
+	std::vector<square> squares;
+	square move;
+	for (int x = 0; x < size(); ++x)
+		for (int y = 0; y < size(); ++y) {
+			move = std::make_pair(x, y);
+			if (get_color(move) == WHITE)
+				squares.push_back(move);
+		}
+	return squares;
+}
+
+std::vector<int> board::free_nodes() {
+	std::vector<int> nodes;
+	for (int n = 0; n < V(); ++n)
+		if (get_node_color(n) == WHITE)
+			nodes.push_back(n);
+	return nodes;
+}
+
+void board::mock_colors() {
+	original_colors = node_color;
+	return;
+}
+
+void board::reset_colors() {
+	node_color = original_colors;
+	return;
 }

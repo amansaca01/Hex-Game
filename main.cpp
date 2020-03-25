@@ -3,7 +3,7 @@
 
 int main() {
 
-	game hex(7);
+	game hex(11);
 
 	hex.play();
 	return 0;

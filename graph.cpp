@@ -167,7 +167,7 @@ int graph::tree_cost() {
 	return cost;
 }
 
-void graph::print_graph() {
+void graph::print_graph() const{
 	cout << size <<endl;
 
 	for (int i = 0; i < size; ++i) {
