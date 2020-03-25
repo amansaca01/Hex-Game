@@ -76,6 +76,67 @@ void board::set_color(const int &node, const color &col) {
 			tablero.add_edge(node, it, 1);
 		}
 	}
+
+	cout << "Player " << col << " moves to hex " << node << ":" << endl;
+}
+
+int board::north_to_south() {
+	// Ver si existe un camino ROJO de Norte a Sur (north_to_south)
+	ShortestPath camino(tablero);
+	for (int i = 0; i < board_size; ++i) {
+		for (int j = board_size; j > 0; --j) {
+			int north = i;
+			int south = tablero.V() - j;
+			if (tablero.get_node_color(north) == RED
+					&& tablero.get_node_color(south) == RED) {
+				int distance = camino.path_size(north, south);
+				if (distance != -1) {
+					cout << "---> GAME OVER <---" << endl;
+					//				cout << "La distancia de " << north << " a " << south << " es "
+					//						<< distance << endl;
+					cout << "There is a red path from ("
+							<< (north / board_size) + 1 << ","
+							<< (north % board_size) + 1 << ") to ("
+							<< (south / board_size) + 1 << ","
+							<< (south % board_size) + 1 << ") of distance "
+							<< distance << "." << endl;
+					cout << "The winner is player 2: the red player (R)."
+							<< endl;
+					exit(EXIT_SUCCESS);
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+void board::west_to_east() {
+	// Ver si existe un camino  AZUL de Oeste a Este (west_to_east)
+	ShortestPath camino(tablero);
+	for (int i = 0; i < board_size; ++i) {
+		for (int j = 1; j < board_size + 1; ++j) {
+			int west = i * board_size;
+			int east = (j * board_size) - 1;
+			if (tablero.get_node_color(west) == BLUE
+					&& tablero.get_node_color(east) == BLUE) {
+				int distance = camino.path_size(west, east);
+				if (distance != -1) {
+					cout << "---> GAME OVER <---" << endl;
+//			cout << "La distancia de " << west << " a " << east << " es "
+//					<< distance << endl;
+					cout << "There is a red path from ("
+							<< (west / board_size) + 1 << ","
+							<< (west % board_size) + 1 << ") to ("
+							<< (east / board_size) + 1 << ","
+							<< (east % board_size) + 1 << ") of distance "
+							<< distance << "." << endl;
+					cout << "The winner is player 1: the blue player (B)."
+							<< endl;
+					exit(EXIT_SUCCESS);
+				}
+			}
+		}
+	}
 }
 
 void board::print_graph() {
@@ -118,52 +179,4 @@ void board::print_board() {
 		std::cout << i + 1 << "   ";
 	std::cout << std::endl;
 	std::cout << std::endl;
-}
-
-void board::north_to_south() {
-	// Ver si existe un camino de Norte a Sur (north_to_south)
-	ShortestPath camino(tablero);
-	for (int i = 0; i < board_size; ++i) {
-		for (int j = board_size; j > 0; --j) {
-			int north = i;
-			int south = tablero.V() - j;
-			int distance = camino.path_size(north, south);
-			if (distance != -1) {
-				cout << "---> GAME OVER <---" << endl;
-//				cout << "La distancia de " << north << " a " << south << " es "
-//						<< distance << endl;
-				cout << "There is a red path from (" << (north / board_size) + 1
-						<< "," << (north % board_size) + 1 << ") to ("
-						<< (south / board_size) + 1 << ","
-						<< (south % board_size) + 1 << ") of distance "
-						<< distance << "." << endl;
-				cout << "The winner is player 2: the red player (R)." << endl;
-				exit(EXIT_SUCCESS);
-			}
-		}
-	}
-}
-
-void board::west_to_east() {
-	// Ver si existe un camino de Oeste a Este (west_to_east)
-	ShortestPath camino(tablero);
-	for (int i = 0; i < board_size; ++i) {
-		for (int j = 1; j < board_size + 1; ++j) {
-			int west = i * board_size;
-			int east = (j * board_size) - 1;
-			int distance = camino.path_size(west, east);
-			if (distance != -1) {
-				cout << "---> GAME OVER <---" << endl;
-//			cout << "La distancia de " << west << " a " << east << " es "
-//					<< distance << endl;
-				cout << "There is a red path from (" << (west / board_size) + 1
-						<< "," << (west % board_size) + 1 << ") to ("
-						<< (east / board_size) + 1 << ","
-						<< (east % board_size) + 1 << ") of distance "
-						<< distance << "." << endl;
-				cout << "The winner is player 1: the blue player (B)." << endl;
-				exit(EXIT_SUCCESS);
-			}
-		}
-	}
 }
